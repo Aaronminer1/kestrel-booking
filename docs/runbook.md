@@ -6,17 +6,21 @@ This runbook must be updated as production-impacting behavior is added.
 
 Prerequisites:
 - Node.js 20+
-- Corepack (ships with Node) and pnpm via Corepack
+- pnpm (recommended via Corepack, but a standalone pnpm install also works)
 
 From a PowerShell prompt at the repository root:
 
-- Enable Corepack:
+- (Optional) Enable Corepack:
 
   `corepack enable`
 
+  If this fails with an `EPERM` error on Windows (due to writing shims under `C:\Program Files\nodejs`), you can usually proceed as long as `pnpm` is already available:
+
+  `pnpm -v`
+
 - Install dependencies:
 
-  `pnpm install`
+  `pnpm install --frozen-lockfile`
 
 - Create a local env file (recommended):
 
@@ -65,6 +69,13 @@ From a PowerShell prompt at the repository root:
     - Confirm Node 20+ is installed: `node -v`
     - Enable Corepack: `corepack enable`
     - Retry: `pnpm -v`
+
+- **`corepack enable` fails with EPERM on Windows**
+  - Symptom: `Internal Error: EPERM: operation not permitted, open 'C:\Program Files\nodejs\pnpx'` (or similar).
+  - Cause: Corepack attempts to create/update shims in a protected directory.
+  - Fix:
+    - If `pnpm -v` already works, you can skip `corepack enable` and proceed.
+    - Otherwise, run PowerShell as Administrator and retry `corepack enable`, or install pnpm by another supported method.
 
 - **Port 3000 already in use**
   - Symptom: server fails to start with an EADDRINUSE error.
