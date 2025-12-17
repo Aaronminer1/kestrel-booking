@@ -10,3 +10,6 @@
 - Added operational documentation: `docs/runbook.md`, `docs/repo-atlas.md`, and `docs/flows/health.md`.
 - Verified locally on Windows: `pnpm install --frozen-lockfile`, `pnpm prisma:generate`, `pnpm db:migrate`, `pnpm lint`, `pnpm typecheck`, and `pnpm test`.
 - Updated `docs/runbook.md` with a documented fallback when `corepack enable` fails with `EPERM` on Windows.
+- Milestone 2 (Slice 1): added `User` + `Role` to Prisma schema and created migration `add_user_auth`.
+- Milestone 2 (Slice 1): added password hashing utilities using `bcryptjs` and corresponding unit tests.
+- Milestone 2 (Slice 1): added `JWT_SECRET` to `.env.example` for local auth development.

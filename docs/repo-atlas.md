@@ -59,6 +59,12 @@ Root configs:
     - `durationMinutes`
     - `priceCents`
     - `createdAt`, `updatedAt`
+  - `User`:
+    - `id` (autoincrement)
+    - `email` (unique)
+    - `passwordHash`
+    - `role` (`ADMIN`, `STAFF`, `CUSTOMER`)
+    - `createdAt`, `updatedAt`
 
 ## Interface map
 
@@ -67,6 +73,7 @@ Root configs:
 - Environment variables:
   - `PORT` (optional; default `3000`)
   - `DATABASE_URL` (required for Prisma scripts; default in `.env.example`)
+  - `JWT_SECRET` (required for Milestone 2 auth endpoints; set in `.env` for local dev)
 
 - Package scripts:
   - `pnpm dev`: start server with watch (`tsx`)
@@ -85,6 +92,9 @@ Root configs:
   - `test/health.test.ts`
   - Uses Fastify `app.inject()` (no network, deterministic)
 
+- Password hashing unit tests:
+  - `test/password.test.ts`
+
 ## Locations of Interest (LOIs)
 
 - `src/server.ts`
@@ -96,8 +106,11 @@ Root configs:
 - `src/routes/health.ts`
   - `registerHealthRoutes()`
   - Invariant: `GET /health` remains DB-independent and returns static JSON
+- `src/security/password.ts`
+  - `hashPassword()` and `verifyPassword()`
+  - Invariant: raw passwords are never stored; verification uses constant-time compare via bcrypt
 - `prisma/schema.prisma`
-  - Invariant: Service is the only domain model in Milestone 1
+  - Invariant: Prisma schema is the source of truth for domain models and auth identity
 - `.github/workflows/ci.yml`
   - Invariant: CI runs `pnpm lint`, `pnpm typecheck`, `pnpm test`
 
