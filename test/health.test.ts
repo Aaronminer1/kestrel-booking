@@ -1,0 +1,22 @@
+import { describe, expect, it } from 'vitest';
+
+import { buildApp } from '../src/app.js';
+
+describe('GET /health', () => {
+  it('returns status ok as JSON', async () => {
+    const app = buildApp();
+
+    const res = await app.inject({
+      method: 'GET',
+      url: '/health'
+    });
+
+    expect(res.statusCode).toBe(200);
+
+    expect(res.headers['content-type']).toMatch(/application\/json/i);
+
+    expect(res.json()).toEqual({ status: 'ok' });
+
+    await app.close();
+  });
+});

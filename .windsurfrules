@@ -1,0 +1,18 @@
+# Project Rules Entrypoint (.windsurfrules)
+
+Purpose: ensure the ruleset applies consistently even when stored in `.windsurf/rules/`.
+
+## Must-read rule modules
+At the start of every task (and again before any multi-file change), you MUST open and follow:
+- `.windsurf/rules/00-core-system-delivery.md`
+- `.windsurf/rules/10-questioning-protocol.md`
+- `.windsurf/rules/20-large-codebase-context.md`
+- `.windsurf/rules/30-quality-security-ops.md`
+- `.windsurf/rules/40-comm-format.md`
+
+## Precedence (conflict resolution)
+1) 00-core-system-delivery
+2) 30-quality-security-ops
+3) 20-large-codebase-context
+4) 10-questioning-protocol
+5) 40-comm-format
