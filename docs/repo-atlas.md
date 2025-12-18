@@ -72,10 +72,12 @@ Root configs:
 
 - HTTP:
   - `GET /health` → `200` `{ "status": "ok" }`
+  - `GET /services` → `200` `{ "services": [...] }` (public)
   - `POST /auth/signup` → `201` `{ token, user }`
   - `POST /auth/login` → `200` `{ token, user }`
   - `GET /auth/me` → `200` `{ user }` (requires `Authorization: Bearer <token>`)
   - `GET /admin/ping` → `200` `{ "pong": true }` (requires `Authorization: Bearer <token>`; role `ADMIN`)
+  - `POST /services` → `201` `{ "service": ... }` (requires `Authorization: Bearer <token>`; role `ADMIN` or `STAFF`)
 - Environment variables:
   - `PORT` (optional; default `3000`)
   - `DATABASE_URL` (required for Prisma scripts; default in `.env.example`)
@@ -107,6 +109,9 @@ Root configs:
 - Admin RBAC integration tests:
   - `test/admin.test.ts`
 
+- Services integration tests:
+  - `test/services.test.ts`
+
 ## Locations of Interest (LOIs)
 
 - `src/server.ts`
@@ -127,6 +132,9 @@ Root configs:
 - `src/routes/admin.ts`
   - `registerAdminRoutes()`
   - Invariant: admin routes require authentication and role checks
+- `src/routes/services.ts`
+  - `registerPublicServiceRoutes()` and `registerServiceAdminRoutes()`
+  - Invariant: `GET /services` is public; `POST /services` is only registered when JWT is enabled and requires `ADMIN`/`STAFF`
 - `src/plugins/prisma.ts`
   - `prismaPlugin`
   - Invariant: Prisma client is registered once and disconnected on close
@@ -152,3 +160,5 @@ See `docs/flows/` for detailed critical path flow maps.
 - `docs/flows/auth-login.md`
 - `docs/flows/auth-me.md`
 - `docs/flows/admin-ping.md`
+- `docs/flows/services-list.md`
+- `docs/flows/services-create.md`

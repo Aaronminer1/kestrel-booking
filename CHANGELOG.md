@@ -20,3 +20,6 @@
 - Milestone 2 (Slice 3): added RBAC guards (`authenticate`, `requireRole`) and admin-only endpoint `GET /admin/ping`.
 - Milestone 2 (Slice 3): added admin promotion helper script (`scripts/seed-admin.ts`) for local development.
 - Milestone 2 (Slice 3): added flow map `docs/flows/admin-ping.md` and updated Repo Atlas.
+- Milestone 3 (Slice 1): added services endpoints: `GET /services` (public) and `POST /services` (requires `ADMIN`/`STAFF`).
+- Milestone 3 (Slice 1): added integration tests for services endpoints (`test/services.test.ts`).
+- Milestone 3 (Slice 1): added flow maps `docs/flows/services-list.md` and `docs/flows/services-create.md` and updated Runbook/Repo Atlas.

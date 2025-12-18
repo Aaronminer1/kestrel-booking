@@ -78,6 +78,30 @@ Expected output:
   - This script promotes an existing user; it does not create users.
   - Authorization checks for `/admin/ping` use the current DB role.
 
+- Validate services endpoints (Milestone 3):
+
+  List services (public):
+
+  `Invoke-RestMethod -Method Get -Uri http://127.0.0.1:3000/services`
+
+  Create a service (requires `ADMIN` or `STAFF`):
+
+  1) Signup and capture token:
+
+  `Invoke-RestMethod -Method Post -Uri http://127.0.0.1:3000/auth/signup -ContentType application/json -Body '{"email":"staff@example.com","password":"pw"}'`
+
+  2) Promote the user:
+
+  ` $env:ADMIN_EMAIL = "staff@example.com"; pnpm tsx scripts/seed-admin.ts `
+
+  3) Login again to obtain a token with the updated role:
+
+  `Invoke-RestMethod -Method Post -Uri http://127.0.0.1:3000/auth/login -ContentType application/json -Body '{"email":"staff@example.com","password":"pw"}'`
+
+  4) Create service (replace `<token>`):
+
+  `Invoke-RestMethod -Method Post -Uri http://127.0.0.1:3000/services -ContentType application/json -Headers @{ Authorization = "Bearer <token>" } -Body '{"name":"Consultation","durationMinutes":30,"priceCents":5000}'`
+
 ## How to run tests and CI checks
 
 From a PowerShell prompt at the repository root:
