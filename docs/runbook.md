@@ -61,6 +61,23 @@ Expected output:
 
   `Invoke-RestMethod -Method Get -Uri http://127.0.0.1:3000/auth/me -Headers @{ Authorization = "Bearer <token>" }`
 
+- Validate admin RBAC endpoint (Milestone 2):
+
+  Admin ping (replace `<token>`):
+
+  `Invoke-RestMethod -Method Get -Uri http://127.0.0.1:3000/admin/ping -Headers @{ Authorization = "Bearer <token>" }`
+
+  Promote a user to admin (local helper):
+
+  - Create a user via `/auth/signup` (or use an existing user email).
+  - Promote the user:
+
+  ` $env:ADMIN_EMAIL = "test@example.com"; pnpm tsx scripts/seed-admin.ts `
+
+  Notes:
+  - This script promotes an existing user; it does not create users.
+  - Authorization checks for `/admin/ping` use the current DB role.
+
 ## How to run tests and CI checks
 
 From a PowerShell prompt at the repository root:

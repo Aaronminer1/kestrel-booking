@@ -17,3 +17,6 @@
 - Milestone 2 (Slice 2): added deterministic test runner (`scripts/test.ts`) using isolated `test.db` and `prisma migrate deploy`.
 - Milestone 2 (Slice 2): fixed Fastify plugin encapsulation for Prisma via `fastify-plugin`.
 - Milestone 2 (Slice 2): pinned `@fastify/jwt` to a Fastify v4 compatible version.
+- Milestone 2 (Slice 3): added RBAC guards (`authenticate`, `requireRole`) and admin-only endpoint `GET /admin/ping`.
+- Milestone 2 (Slice 3): added admin promotion helper script (`scripts/seed-admin.ts`) for local development.
+- Milestone 2 (Slice 3): added flow map `docs/flows/admin-ping.md` and updated Repo Atlas.

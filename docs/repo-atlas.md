@@ -75,6 +75,7 @@ Root configs:
   - `POST /auth/signup` → `201` `{ token, user }`
   - `POST /auth/login` → `200` `{ token, user }`
   - `GET /auth/me` → `200` `{ user }` (requires `Authorization: Bearer <token>`)
+  - `GET /admin/ping` → `200` `{ "pong": true }` (requires `Authorization: Bearer <token>`; role `ADMIN`)
 - Environment variables:
   - `PORT` (optional; default `3000`)
   - `DATABASE_URL` (required for Prisma scripts; default in `.env.example`)
@@ -103,6 +104,9 @@ Root configs:
 - Auth integration tests:
   - `test/auth.test.ts`
 
+- Admin RBAC integration tests:
+  - `test/admin.test.ts`
+
 ## Locations of Interest (LOIs)
 
 - `src/server.ts`
@@ -117,6 +121,12 @@ Root configs:
 - `src/routes/auth.ts`
   - `registerAuthRoutes()`
   - Invariant: auth routes require `JWT_SECRET` and use Prisma for persistence
+- `src/auth/guards.ts`
+  - `authenticate(app)` and `requireRole([...])`
+  - Invariant: auth decisions are based on DB role, not only token claims
+- `src/routes/admin.ts`
+  - `registerAdminRoutes()`
+  - Invariant: admin routes require authentication and role checks
 - `src/plugins/prisma.ts`
   - `prismaPlugin`
   - Invariant: Prisma client is registered once and disconnected on close
@@ -124,6 +134,8 @@ Root configs:
   - Fastify and JWT type augmentation
 - `scripts/test.ts`
   - Deterministic test runner that runs migrations against `test.db`
+- `scripts/seed-admin.ts`
+  - Local helper to promote an existing user to `ADMIN`
 - `src/security/password.ts`
   - `hashPassword()` and `verifyPassword()`
   - Invariant: raw passwords are never stored; verification uses constant-time compare via bcrypt
@@ -139,3 +151,4 @@ See `docs/flows/` for detailed critical path flow maps.
 - `docs/flows/auth-signup.md`
 - `docs/flows/auth-login.md`
 - `docs/flows/auth-me.md`
+- `docs/flows/admin-ping.md`
