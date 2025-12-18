@@ -26,6 +26,12 @@ From a PowerShell prompt at the repository root:
 
   `Copy-Item .env.example .env`
 
+- Configure auth (Milestone 2):
+
+  Set a JWT signing secret in `.env`:
+
+  `JWT_SECRET="dev-secret"`
+
 - Run DB migrations (creates `dev.db` by default):
 
   `pnpm db:migrate`
@@ -40,6 +46,20 @@ From a PowerShell prompt at the repository root:
 
 Expected output:
 - `status` should be `ok`.
+
+- Validate auth endpoints (Milestone 2):
+
+  Signup:
+
+  `Invoke-RestMethod -Method Post -Uri http://127.0.0.1:3000/auth/signup -ContentType application/json -Body '{"email":"test@example.com","password":"pw"}'`
+
+  Login:
+
+  `Invoke-RestMethod -Method Post -Uri http://127.0.0.1:3000/auth/login -ContentType application/json -Body '{"email":"test@example.com","password":"pw"}'`
+
+  Me (replace `<token>`):
+
+  `Invoke-RestMethod -Method Get -Uri http://127.0.0.1:3000/auth/me -Headers @{ Authorization = "Bearer <token>" }`
 
 ## How to run tests and CI checks
 
@@ -56,6 +76,10 @@ From a PowerShell prompt at the repository root:
 - Tests:
 
   `pnpm test`
+
+  Notes:
+  - `pnpm test` runs tests against an isolated SQLite database file `./test.db`.
+  - The test runner applies migrations via `pnpm db:deploy` using `DATABASE_URL=file:./test.db`.
 
 - Run the full local verification sequence (recommended):
 
@@ -94,6 +118,12 @@ From a PowerShell prompt at the repository root:
     - Confirm contents of `.env` include:
       - `DATABASE_URL="file:./dev.db"`
     - Retry: `pnpm db:migrate`
+
+- **Auth endpoints return 404**
+  - Cause: `JWT_SECRET` is not set, so auth routes are disabled at startup.
+  - Fix:
+    - Ensure `.env` contains `JWT_SECRET`.
+    - Restart the server.
 
 ## Rollback procedure
 

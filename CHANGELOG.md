@@ -13,3 +13,7 @@
 - Milestone 2 (Slice 1): added `User` + `Role` to Prisma schema and created migration `add_user_auth`.
 - Milestone 2 (Slice 1): added password hashing utilities using `bcryptjs` and corresponding unit tests.
 - Milestone 2 (Slice 1): added `JWT_SECRET` to `.env.example` for local auth development.
+- Milestone 2 (Slice 2): added auth routes (`/auth/signup`, `/auth/login`, `/auth/me`) with JWT Bearer tokens.
+- Milestone 2 (Slice 2): added deterministic test runner (`scripts/test.ts`) using isolated `test.db` and `prisma migrate deploy`.
+- Milestone 2 (Slice 2): fixed Fastify plugin encapsulation for Prisma via `fastify-plugin`.
+- Milestone 2 (Slice 2): pinned `@fastify/jwt` to a Fastify v4 compatible version.

@@ -12,6 +12,8 @@ This file must be maintained as the system grows.
   - Flow maps for critical paths
 - `prisma/`
   - Prisma schema and migrations (SQLite)
+- `scripts/`
+  - Local tooling scripts (test runner)
 - `src/`
   - Runtime application code (Fastify server, routes)
 - `test/`
@@ -24,7 +26,7 @@ Root configs:
 - `eslint.config.js`: lint config
 - `vitest.config.ts`: test runner config
 - `.env.example`: documented local env vars
-- `.gitignore`: ignores `.env`, `dev.db`, `dist/`, `node_modules/`
+- `.gitignore`: ignores `.env`, `dev.db`, `test.db`, `dist/`, `node_modules/`
 
 ## Component map
 
@@ -70,6 +72,9 @@ Root configs:
 
 - HTTP:
   - `GET /health` → `200` `{ "status": "ok" }`
+  - `POST /auth/signup` → `201` `{ token, user }`
+  - `POST /auth/login` → `200` `{ token, user }`
+  - `GET /auth/me` → `200` `{ user }` (requires `Authorization: Bearer <token>`)
 - Environment variables:
   - `PORT` (optional; default `3000`)
   - `DATABASE_URL` (required for Prisma scripts; default in `.env.example`)
@@ -79,7 +84,7 @@ Root configs:
   - `pnpm dev`: start server with watch (`tsx`)
   - `pnpm build`: compile to `dist/`
   - `pnpm start`: run compiled server
-  - `pnpm test`: run Vitest
+  - `pnpm test`: runs migrations against `test.db` and then runs Vitest (`scripts/test.ts`)
   - `pnpm lint`: run ESLint
   - `pnpm typecheck`: typecheck all TS (including tests/config)
   - `pnpm db:migrate`: `prisma migrate dev`
@@ -95,6 +100,9 @@ Root configs:
 - Password hashing unit tests:
   - `test/password.test.ts`
 
+- Auth integration tests:
+  - `test/auth.test.ts`
+
 ## Locations of Interest (LOIs)
 
 - `src/server.ts`
@@ -106,6 +114,16 @@ Root configs:
 - `src/routes/health.ts`
   - `registerHealthRoutes()`
   - Invariant: `GET /health` remains DB-independent and returns static JSON
+- `src/routes/auth.ts`
+  - `registerAuthRoutes()`
+  - Invariant: auth routes require `JWT_SECRET` and use Prisma for persistence
+- `src/plugins/prisma.ts`
+  - `prismaPlugin`
+  - Invariant: Prisma client is registered once and disconnected on close
+- `src/fastify-types.ts`
+  - Fastify and JWT type augmentation
+- `scripts/test.ts`
+  - Deterministic test runner that runs migrations against `test.db`
 - `src/security/password.ts`
   - `hashPassword()` and `verifyPassword()`
   - Invariant: raw passwords are never stored; verification uses constant-time compare via bcrypt
@@ -118,3 +136,6 @@ Root configs:
 See `docs/flows/` for detailed critical path flow maps.
 
 - `docs/flows/health.md`
+- `docs/flows/auth-signup.md`
+- `docs/flows/auth-login.md`
+- `docs/flows/auth-me.md`
